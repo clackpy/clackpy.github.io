@@ -1,0 +1,38 @@
+<svg width="680" height="560" viewBox="0 0 680 560" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <clipPath id="shield-clip">
+    <path d="M340 80 L480 125 L480 330 Q480 440 340 495 Q200 440 200 330 L200 125 Z"/>
+  </clipPath>
+</defs>
+
+<!-- Shield fill -->
+<path d="M340 80 L480 125 L480 330 Q480 440 340 495 Q200 440 200 330 L200 125 Z" fill="#2e1a0a"/>
+
+<g clip-path="url(#shield-clip)">
+  <path d="M180 330 Q280 290 360 250 Q440 218 500 200 L500 600 L180 600 Z" fill="#F0A050" opacity="0.25"/>
+  <path d="M180 330 Q280 290 360 250 Q440 218 500 200" fill="none" stroke="#F0A050" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+  <path d="M180 370 Q270 315 350 250 Q430 190 500 155 L500 600 L180 600 Z" fill="#7A3D0F" opacity="0.3"/>
+  <path d="M180 370 Q270 315 350 250 Q430 190 500 155" fill="none" stroke="#E07B28" stroke-width="4.5" stroke-linecap="round"/>
+  <circle cx="270" cy="315" r="7" fill="#E07B28"/>
+  <circle cx="350" cy="250" r="7" fill="#E07B28"/>
+  <circle cx="430" cy="190" r="7" fill="#E07B28"/>
+  <circle cx="270" cy="315" r="3" fill="#F5EDE1"/>
+  <circle cx="350" cy="250" r="3" fill="#F5EDE1"/>
+  <circle cx="430" cy="190" r="3" fill="#F5EDE1"/>
+</g>
+
+<!-- Shield outline -->
+<path d="M340 80 L480 125 L480 330 Q480 440 340 495 Q200 440 200 330 L200 125 Z" fill="none" stroke="#E07B28" stroke-width="6" stroke-linejoin="round"/>
+
+<!-- Compass -->
+<g transform="translate(290, 185)">
+  <circle cx="0" cy="0" r="24" fill="none" stroke="#E07B28" stroke-width="3"/>
+  <circle cx="0" cy="0" r="4.5" fill="#F0A050"/>
+  <polygon points="0,-20 -6.5,-4 0,-9 6.5,-4" fill="#F0A050"/>
+  <polygon points="0,20 -6.5,4 0,9 6.5,4" fill="#E07B28" opacity="0.7"/>
+  <line x1="18" y1="0" x2="23" y2="0" stroke="#E07B28" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="-18" y1="0" x2="-23" y2="0" stroke="#E07B28" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="0" y1="-18" x2="0" y2="-23" stroke="#E07B28" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="0" y1="18" x2="0" y2="23" stroke="#E07B28" stroke-width="2.5" stroke-linecap="round"/>
+</g>
+</svg>
