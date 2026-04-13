@@ -1,6 +1,353 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta name="robots" content="noindex">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>clackpy — Made for guiding your lead.</title>
+  <meta name="description" content="clackpy combines a Python backend with a modern Nuxt dashboard to track and analyze Clash of Clans clan data. Self-hosted, open source, non-commercial." />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* ── Ambient background ── */
+    .bg-glow {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .bg-glow::before {
+      content: '';
+      position: absolute;
+      top: -30%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 900px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      opacity: 0.3;
+      animation: pulse 8s ease-in-out infinite alternate;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.2; transform: translateX(-50%) scale(1); }
+      100% { opacity: 0.35; transform: translateX(-50%) scale(1.1); }
+    }
+
+    /* ── Noise texture overlay ── */
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      text-align: center;
+      padding: 80px 0 60px;
+    }
+    .nav-logo {
+      width: 26px;
+      height: auto;
+      margin-right: 8px;
+      vertical-align: -4px;
+    }
+    .hero h1 {
+      font-family: var(--font-mono);
+      font-size: clamp(2.4rem, 6vw, 3.2rem);
+      font-weight: 700;
+      color: var(--text-bright);
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      animation: fadeUp 0.6s ease-out 0.08s both;
+    }
+    .hero .tagline {
+      margin-top: 16px;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--text-dim);
+      animation: fadeUp 0.6s ease-out 0.16s both;
+    }
+    .hero .desc {
+      margin-top: 20px;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--text);
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+      animation: fadeUp 0.6s ease-out 0.24s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Badges ── */
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s ease-out 0.32s both;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-family: var(--font-mono);
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      background: var(--bg-card);
+      white-space: nowrap;
+    }
+    .badge .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .dot--blue { background: var(--accent); }
+    .dot--amber { background: #f59e0b; }
+    .dot--green { background: #22c55e; }
+
+    /* ── CTA ── */
+    .cta-row {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 36px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.6s ease-out 0.4s both;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: var(--font-body);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: #1a94ff;
+      box-shadow: 0 0 24px var(--accent-glow);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover {
+      border-color: rgba(255,255,255,0.15);
+      background: var(--bg-card);
+    }
+    .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    /* ── Divider ── */
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: var(--border);
+      margin: 64px auto;
+    }
+
+    /* ── Feature cards ── */
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .feature {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .feature:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255,255,255,0.1);
+    }
+    .feature .icon {
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+    .feature h3 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 6px;
+    }
+    .feature p {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.55;
+    }
+
+    /* ── Tech stack ── */
+    .stack {
+      margin-top: 64px;
+      text-align: center;
+    }
+    .stack-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+    }
+    .stack-items {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .stack-item {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .stack-item:hover { opacity: 1; }
+
+    /* ── WIP banner ── */
+    .wip-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      background: rgba(245, 158, 11, 0.08);
+      border-bottom: 1px solid rgba(245, 158, 11, 0.15);
+      font-size: 0.78rem;
+      color: #f59e0b;
+      font-weight: 500;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 560px) {
+      .features { grid-template-columns: 1fr; }
+      .hero { padding: 52px 0 40px; }
+      .nav-links { gap: 16px; }
+    }
+  </style>
 </head>
+<body>
+
+  <div class="wip-bar">
+    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    Work in progress — actively under development
+  </div>
+
+  <div class="bg-glow"></div>
+  <div class="noise"></div>
+
+  <div class="wrapper">
+
+    <nav>
+      <a href="#" class="nav-wordmark"><img class="nav-logo" src="logo.svg" alt="clackpy logo" />clackpy</a>
+      <div class="nav-links">
+        <a href="https://github.com/clackpy">GitHub</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <h1>clackpy</h1>
+      <p class="tagline">"Made for guiding your lead."</p>
+      <p class="desc">
+        An open, self-hosted tool for Clash of Clans leaders.
+        Track player &amp; clan data with a Python backend and a modern web dashboard — all in one monorepo.
+      </p>
+
+      <div class="badges">
+        <span class="badge"><span class="dot dot--blue"></span> Source-available</span>
+        <span class="badge"><span class="dot dot--amber"></span> PolyForm Noncommercial</span>
+        <span class="badge"><span class="dot dot--green"></span> Self-hosted</span>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/clackpy">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .3a12 12 0 00-3.8 23.38c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61a3.18 3.18 0 00-1.33-1.76c-1.09-.74.08-.73.08-.73a2.52 2.52 0 011.84 1.24 2.56 2.56 0 003.5 1 2.56 2.56 0 01.76-1.6c-2.67-.3-5.47-1.33-5.47-5.93a4.64 4.64 0 011.24-3.22 4.3 4.3 0 01.12-3.18s1-.32 3.3 1.23a11.38 11.38 0 016 0c2.3-1.55 3.3-1.23 3.3-1.23a4.3 4.3 0 01.12 3.18 4.64 4.64 0 011.24 3.22c0 4.61-2.81 5.63-5.48 5.92a2.87 2.87 0 01.82 2.23v3.29c0 .32.22.7.82.58A12 12 0 0012 .3z"/></svg>
+          Soon on GitHub
+        </a>
+        <a class="btn btn-ghost" href="#features">
+          Learn more
+        </a>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <section id="features">
+      <div class="features">
+        <div class="feature">
+          <div class="icon">📊</div>
+          <h3>Clan Analytics</h3>
+          <p>Collects, stores and analyzes player &amp; clan statistics from the Clash of Clans API.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🖥️</div>
+          <h3>Modern Dashboard</h3>
+          <p>A clean web-based interface with diverse UI elements for interactive visualization.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🏠</div>
+          <h3>Self-Hosted</h3>
+          <p>Run it on your own infrastructure. Your data stays yours — no third-party dependencies.</p>
+        </div>
+        <div class="feature">
+          <div class="icon">🤝</div>
+          <h3>Community Driven</h3>
+          <p>Open to contributions. Fork, improve, and share — under a non-commercial license.</p>
+        </div>
+      </div>
+    </section>
+
+<div class="stack">
+  <p class="stack-label">Built with</p>
+  <div class="stack-items">
+    <!-- Backend -->
+    <span class="stack-item">Python</span>
+    <span class="stack-item">FastAPI</span>
+    <span class="stack-item">Uvicorn</span>
+    <!-- Data -->
+    <span class="stack-item">PostgreSQL</span>
+    <span class="stack-item">SQLAlchemy</span>
+    <span class="stack-item">Alembic</span>
+    <!-- Frontend -->
+    <span class="stack-item">Nuxt UI</span>
+
+  </div>
+</div>
+
+    <footer>
+      <p>
+        PolyForm Noncommercial 1.0.0 · 
+        Built with ❤️ by <a href="https://github.com/clackpy">the community</a>
+        <br />
+        <a href="https://supercell.com/en/games/clashofclans/">Clash of Clans</a> is a trademark of Supercell. · <a href="impressum/">Impressum</a>
+      </p>
+    </footer>
+
+  </div>
+
+</body>
 </html>

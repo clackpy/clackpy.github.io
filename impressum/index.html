@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impressum — clackpy</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+
+    .imprint {
+      padding: 64px 0 80px;
+    }
+    .imprint h1 {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-bright);
+      margin-bottom: 12px;
+      letter-spacing: -0.02em;
+    }
+    .imprint .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 36px;
+      max-width: 42ch;
+      line-height: 1.6;
+    }
+    .imprint-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .imprint-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      transition: border-color 0.2s;
+    }
+    .imprint-card:hover {
+      border-color: rgba(255,255,255,0.1);
+    }
+    .imprint-card.full {
+      grid-column: 1 / -1;
+    }
+    .imprint-card .label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .imprint-card p {
+      font-size: 0.88rem;
+      color: var(--text);
+      line-height: 1.7;
+    }
+    .imprint-card.full p {
+      font-size: 0.78rem;
+    }
+    .imprint-card a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .imprint-card a:hover {
+      color: var(--text-bright);
+    }
+    @media (max-width: 560px) {
+      .imprint-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── Language toggle ── */
+    .lang-toggle {
+      position: relative;
+      display: inline-flex;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 3px;
+      gap: 2px;
+      margin-bottom: 36px;
+    }
+    .lang-toggle button {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 5px 16px;
+      background: transparent;
+      color: var(--text-dim);
+      border: none;
+      border-radius: 7px;
+      cursor: pointer;
+      transition: color 0.18s;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+    .lang-toggle button.active {
+      color: #fff;
+    }
+    .lang-toggle button:not(.active):hover {
+      color: var(--text);
+    }
+    .lang-toggle-pill {
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      height: calc(100% - 6px);
+      background: var(--accent);
+      border-radius: 7px;
+      transition: transform 0.22s cubic-bezier(.4,0,.2,1), width 0.22s cubic-bezier(.4,0,.2,1);
+      z-index: 0;
+    }
+    [data-lang="en"] { display: none; }
+    body.en [data-lang="en"] { display: block; }
+    body.en [data-lang="de"] { display: none; }
+
+</style>
+</head>
+<body class="en">
+
+  <div class="wrapper">
+
+    <nav>
+      <a href="/" class="nav-wordmark"><img class="nav-logo" src="../logo.svg" alt="clackpy logo" />clackpy</a>
+      <div class="nav-links">
+        <a href="/">Home</a>
+      </div>
+    </nav>
+
+    <section class="imprint">
+      <h1>Impressum</h1>
+        <div class="lang-toggle" id="langToggle">
+            <div class="lang-toggle-pill" id="langPill"></div>
+            <button class="active" onclick="setLang('en')">EN</button>
+            <button onclick="setLang('de')">DE</button>
+        </div>
+
+      <p class="subtitle" data-lang="de">Angaben gemäß § 5 TMG</p>
+      <p class="subtitle" data-lang="en">Information pursuant to § 5 TMG</p>
+
+      <div class="imprint-grid">
+        <div class="imprint-card full" data-lang="en">
+          <div class="label">Note</div>
+          <p>The German version of this page shall be considered the only authoritative reference in legal disputes.</p>
+        </div>
+        <div class="imprint-card">
+          <div class="label" data-lang="de">Anschrift</div>
+          <div class="label" data-lang="en">Address</div>
+          <p>
+            Lennard Solterbeck<br />
+            c/o Block Services<br />
+            Stuttgarter Str. 106<br />
+            70736 Fellbach
+          </p>
+        </div>
+        <div class="imprint-card">
+          <div class="label" data-lang="de">Kontakt</div>
+            <div class="label" data-lang="en">Contact</div>
+          <p data-lang="de">
+            Telefon: auf Anfrage per E-Mail<br />
+            E-Mail: <a href="mailto:lennardsolterbeck@gmail.com">lennardsolterbeck@gmail.com</a>
+          </p>
+          <p data-lang="en">
+            Phone: available on request via email<br />
+            Email: <a href="mailto:lennardsolterbeck@gmail.com">lennardsolterbeck@gmail.com</a>
+          </p>
+        </div>
+        <div class="imprint-card full">
+          <div class="label" data-lang="de">Redaktionell verantwortlich</div>
+            <div class="label" data-lang="en">Editorially responsible</div>
+          <p>Lennard Solterbeck</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p data-lang="de">
+        <a href="/">← Zurück zu clackpy</a>
+      </p>
+      <p data-lang="en">
+        <a href="/">← Back to clackpy</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <script>
+    function movePill(activeBtn) {
+      const pill = document.getElementById('langPill');
+      const toggle = document.getElementById('langToggle');
+      const toggleRect = toggle.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+      pill.style.width = btnRect.width + 'px';
+      pill.style.transform = `translateX(${btnRect.left - toggleRect.left - 3}px)`;
+    }
+
+    function setLang(lang) {
+      document.body.className = lang === 'en' ? 'en' : '';
+      document.documentElement.lang = lang;
+      let activeBtn;
+      document.querySelectorAll('.lang-toggle button').forEach(btn => {
+        const isActive = btn.textContent === lang.toUpperCase();
+        btn.classList.toggle('active', isActive);
+        if (isActive) activeBtn = btn;
+      });
+      if (activeBtn) movePill(activeBtn);
+    }
+
+    // Init pill position on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const activeBtn = document.querySelector('.lang-toggle button.active');
+      if (activeBtn) movePill(activeBtn);
+    });
+  </script>
+
+</body>
+</html>
